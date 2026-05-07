@@ -560,6 +560,29 @@ static struct gatts_char_profile gl_conn_svc_char_profile_tab[CONNECTIVITY_PROFI
 
 };
 
+/**
+ * @brief: Create the speed data packet that the board expects.
+ * @param[in] speed The speed value to encode, between -384 and +384
+ * @param[in] trigger Trigger button state, 1 for pressed, 0 for released
+ * @param[in] button Menu Button state, 1 for pressed, 0 for released
+ * @param[in] output Buffer to store the encoded data, must be at least 4 bytes long
+ */
+static void create_speed_data(int speed, int trigger, int button, uint8_t output[4]) {
+    speed += 128 + 384;
+
+    uint32_t raw_data = (uint32_t)speed << 16;
+
+    if (trigger == 1)
+        raw_data += 1 << 9;
+    if (button == 1)
+        raw_data += 1 << 8;
+
+    output[0] = (raw_data >> 24) & 0xFF;
+    output[1] = (raw_data >> 16) & 0xFF;
+    output[2] = (raw_data >> 8) & 0xFF;
+    output[3] = (raw_data >> 0) & 0xFF;
+}
+
 static void gatts_profile_otau_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param)
 {
     switch (event)
@@ -756,7 +779,8 @@ static void gatts_profile_controls_event_handler(esp_gatts_cb_event_t event, esp
         {
             ESP_LOGI(GATTS_TAG, "notify enable");
             // Data to be sent in the indication
-            uint8_t indication_data[] = {0x03, 0x14, 0x02, 0x00}; // Replace with your data
+            uint8_t indication_data[4];
+            create_speed_data(80, 1, 0, indication_data); // Replace with your data
 
             // Send an indication
             esp_err_t indicate_ret = esp_ble_gatts_send_indicate(
@@ -781,7 +805,8 @@ static void gatts_profile_controls_event_handler(esp_gatts_cb_event_t event, esp
             ESP_LOG_BUFFER_HEX(GATTS_TAG, param->conf.value, param->conf.len);
         }
         // Data to be sent in the indication
-        uint8_t indication_data[] = {0x03, 0x14, 0x02, 0x00}; // Replace with your data
+            uint8_t indication_data[4];
+            create_speed_data(80, 1, 0, indication_data); // Replace with your data
 
         // Send an indication
         esp_err_t indicate_ret = esp_ble_gatts_send_indicate(
