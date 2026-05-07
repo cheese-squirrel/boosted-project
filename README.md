@@ -1,3 +1,13 @@
+# ABOUT THIS FORK
+
+This is my work to upgrade this project and turn it into a usable remote for the boosted board. Currently, the repo (and readme) is very WIP so bear with me. 
+
+## My Data
+
+- MCU: ESP32-S3-nano by Waveshare
+- ESP-IDF: v6.0.1
+- Board version: unknown, but most likely v1.5.2
+
 # Boosted Project
 
 A replication of the pairing protocol between a boosted board and remote using an ESP32. My current board version is v1.5.2 and remote is v2.3.3.
