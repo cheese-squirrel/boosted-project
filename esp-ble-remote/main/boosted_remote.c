@@ -567,7 +567,7 @@ static void gatts_profile_otau_event_handler(esp_gatts_cb_event_t event, esp_gat
     case ESP_GATTS_REG_EVT:
         ESP_LOGI(GATTS_TAG, "REGISTER_APP_EVT, status %d, app_id %d", param->reg.status, param->reg.app_id);
 
-        esp_err_t set_dev_name_ret = esp_bt_dev_set_device_name(DEVICE_NAME);
+        esp_err_t set_dev_name_ret = esp_ble_gap_set_device_name(DEVICE_NAME);
         if (set_dev_name_ret)
         {
             ESP_LOGE(GATTS_TAG, "set device name failed, error code = %x", set_dev_name_ret);
@@ -778,7 +778,7 @@ static void gatts_profile_controls_event_handler(esp_gatts_cb_event_t event, esp
         ESP_LOGI(GATTS_TAG, "ESP_GATTS_CONF_EVT, status %d attr_handle %d", param->conf.status, param->conf.handle);
         if (param->conf.status != ESP_GATT_OK)
         {
-            esp_log_buffer_hex(GATTS_TAG, param->conf.value, param->conf.len);
+            ESP_LOG_BUFFER_HEX(GATTS_TAG, param->conf.value, param->conf.len);
         }
         // Data to be sent in the indication
         uint8_t indication_data[] = {0x03, 0x14, 0x02, 0x00}; // Replace with your data
@@ -1184,6 +1184,19 @@ void app_main()
     if (ret)
     {
         ESP_LOGE(GATTS_TAG, "privacy set failed, error code = %x", ret);
+        return;
+    }
+
+    esp_bd_addr_t rand_addr;
+    ret = esp_ble_gap_addr_create_static(rand_addr);
+    if (ret) {
+        ESP_LOGE(GATTS_TAG, "Failed to create random address. Error code = %x", ret);
+        return;
+    }
+
+    ret = esp_ble_gap_set_rand_addr(rand_addr);
+    if (ret) {
+        ESP_LOGE(GATTS_TAG, "set random address failed, error code = %x", ret);
         return;
     }
 
