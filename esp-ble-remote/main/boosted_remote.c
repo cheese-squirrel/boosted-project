@@ -805,8 +805,8 @@ static void gatts_profile_controls_event_handler(esp_gatts_cb_event_t event, esp
             ESP_LOG_BUFFER_HEX(GATTS_TAG, param->conf.value, param->conf.len);
         }
         // Data to be sent in the indication
-            uint8_t indication_data[4];
-            create_speed_data(80, 1, 0, indication_data); // Replace with your data
+        uint8_t indication_data[4];
+        create_speed_data(80, 1, 0, indication_data); // Replace with your data
 
         // Send an indication
         esp_err_t indicate_ret = esp_ble_gatts_send_indicate(

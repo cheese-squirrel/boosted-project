@@ -1,13 +1,3 @@
-# ABOUT THIS FORK
-
-This is my work to upgrade this project and turn it into a usable remote for the boosted board. Currently, the repo (and readme) is very WIP so bear with me. 
-
-## My Data
-
-- MCU: ESP32-S3-nano by Waveshare
-- ESP-IDF: v6.0.1
-- Board version: unknown, but most likely v1.5.2
-
 # Boosted Project
 
 A replication of the pairing protocol between a boosted board and remote using an ESP32. My current board version is v1.5.2 and remote is v2.3.3.
@@ -20,10 +10,14 @@ To get started I recommend following these resources to get setup with ESP-IDF B
 1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/
 2. https://github.com/espressif/esp-idf
 
+The code was last tested on an ESP32-S3-nano, installed with ESP-IDF v6.0.1.
+
 To make it easier for myself, I set up my development environment through vscode:
 https://docs.espressif.com/projects/esp-idf/en/v4.2.3/esp32/get-started/vscode-setup.html
 
 You only need to work with the code in the `esp-ble-remote`. The rest is a bit of a mess and was for testing/dev purposes.
+Look for the ESP_GATTS_WRITE_EVT and ESP_GATTS_CONF_EVT cases in the `gatts_profile_controls_event_handler` function (around line 780).
+The indication data in there contains the data sent to the board with information about speed and button states.
 
 ## Readings
 
